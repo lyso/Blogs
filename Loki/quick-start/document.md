@@ -1,11 +1,11 @@
 
 Loki is a log aggregation system in LGTM stack, which is responsible to collect, store, and query logs. Loki is very easy to start with and highly compatible with any log format. This article discussed an example Loki Kubernetes deployment solution, which can be used in production environment.
 
-### Architecture
+## Overview
 
 Loki relies on other applications for log collection (agent) and query (client).
 
-![[LokiStack.excalidraw]]
+![](LokiStack.excalidraw.png)
 
 
 On the log collection side, Loki does not pull log from apps, but relies on agents to push log via Rest API. In this example, promtail is used as the agent as [the official recommended]([Send log data to Loki | Grafana Loki documentation](https://grafana.com/docs/loki/latest/send-data/)) when deployed with K8s.
@@ -17,7 +17,7 @@ Around the Loki server, optional components can be deployed to make the solution
 It is usually need to save log on a more reliable storage service rather than on the local driver of the Loki servers. In this example, S3 is used. 
 
 
-### Deployment
+## Deployment
 
 1. Prerequisites: helm, kubectl 
 
@@ -96,27 +96,27 @@ kubectl port-forward --namespace loki service/loki-grafana 3000:80
 
 The above commands will install Grafana to loki namespace, print admin password and forward grafana's service to local 3000 port. After that, open web browser and visit `http://localhost:3000`. Username is `admin` and password was printed in second step.
 
-### Configure Grafana and query logs
+## Configure Grafana and query logs
 
 After logging into Grafana's home page, create a connection via the `Add new connection` link from the top left hamburg menu.
 
-![[Pasted image 20231015115339.png|300]]
+![ad|300](./Pasted%20image%2020231015115339.png)
 
 Search for "loki" in data source list.
 
-![[Pasted image 20231015115018.png]]
+![[Pasted image 20231015115018.png]](./Pasted%20image%2020231015115018.png)
 
 
 On the Loki connection edit page, type in the url of Loki's gateway `http://loki-gateway` or `http://loki-gateway.loki.svc.cluster.local`. Then click `Save & test` button. Then, create a grafana dashboard or simply explore logs via the two buttons on top right.
 
-![[Pasted image 20231015134814.png]]
+![](./Pasted%20image%2020231015134814.png)
 
 
 In this example, the explore page was opened and a simple query was build with the help of builder as shown below. For more information about writing your own query, please refer to [the document](https://grafana.com/docs/loki/latest/query/).
 
-![[Pasted image 20231015134130.png]]
+![[Pasted image 20231015134130.png]](./Pasted%20image%2020231015134130.png)
 
 
-### Summary
+## Summary
 
 In this article, a simple yet reliable loki stack is deployed via Kubernetes. It consists of Loki server, cloud storage layer, agent and client. The helm chart provided by Loki has lots of configuration to customize the deployments and its components. For more values, please refer to its [document](https://grafana.com/docs/loki/latest/setup/install/helm/reference/) and [github repo](https://github.com/grafana/loki/blob/8e9635f41a4c32c79d5779b8d719473ea413542e/production/helm/loki/values.yaml)
